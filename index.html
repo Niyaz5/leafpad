@@ -32,13 +32,14 @@
             border: 2px solid #444; /* Slightly lighter gray border */
             padding: 10px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 16px; /* Fixed font size */
             border-radius: 5px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
             overflow: auto;
             white-space: pre-wrap; /* Preserve whitespace formatting */
             display: flex;
             flex-direction: column;
+            outline: none; /* Remove default focus outline */
         }
         #controls {
             display: flex;
@@ -140,17 +141,16 @@
 
     <script>
         function formatText(style) {
-            switch(style) {
-                case 'bold':
-                    document.execCommand('bold', false, null);
-                    break;
-                case 'italic':
-                    document.execCommand('italic', false, null);
-                    break;
-                case 'remove':
-                    document.execCommand('removeFormat', false, null);
-                    break;
+            document.execCommand('styleWithCSS', false, true);
+            if (style === 'remove') {
+                document.execCommand('removeFormat', false, null);
+                return;
             }
+            const currentStyle = style === 'bold' ? 'fontWeight' : 'fontStyle';
+            document.execCommand(style, false, null);
+            // Reset formatting for other styles
+            document.execCommand('fontWeight', false, currentStyle === 'fontWeight' ? '' : 'normal');
+            document.execCommand('fontStyle', false, currentStyle === 'fontStyle' ? '' : 'normal');
         }
 
         function alignText(alignment) {
@@ -178,7 +178,6 @@
             if (event.key === 'Enter') {
                 event.preventDefault();
                 document.execCommand('insertHTML', false, '<br>'); // Insert a new line without extra line break
-                document.execCommand('removeFormat', false, null); // Remove formatting from the new line
             }
         });
     </script>
