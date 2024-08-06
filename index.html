@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>leafpad</title>
+    <title>Calm Themed Leafpad</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -18,7 +18,7 @@
         #container {
             width: 90%;
             max-width: 1000px;
-            margin:  auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #1e1e1e; /* Darker container background */
             border-radius: 10px;
@@ -140,7 +140,17 @@
 
     <script>
         function formatText(style) {
-            document.execCommand(style, false, null);
+            switch(style) {
+                case 'bold':
+                    document.execCommand('bold', false, null);
+                    break;
+                case 'italic':
+                    document.execCommand('italic', false, null);
+                    break;
+                case 'remove':
+                    document.execCommand('removeFormat', false, null);
+                    break;
+            }
         }
 
         function alignText(alignment) {
@@ -166,9 +176,9 @@
 
         document.getElementById('editor').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
-                document.execCommand('insertHTML', false, '<br><br>'); // Insert a new line
+                event.preventDefault();
+                document.execCommand('insertHTML', false, '<br>'); // Insert a new line without extra line break
                 document.execCommand('removeFormat', false, null); // Remove formatting from the new line
-                event.preventDefault(); // Prevent default behavior
             }
         });
     </script>
